@@ -21,6 +21,7 @@ custom:
     dockerizePip: false
 
   logSubscription:
+    enabled: true
     destinationArn:
       Fn::GetAtt:
         - LogFirehose
