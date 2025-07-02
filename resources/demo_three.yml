@@ -1,5 +1,5 @@
 handler: demo_three.lambda_handler
-module: demo_three
+module: demo_lambdas
 name: ${self:service}-demo_three-${self:provider.stage}
 
 package:
