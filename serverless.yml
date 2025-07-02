@@ -11,6 +11,7 @@ provider:
 
 plugins:
   - serverless-python-requirements
+  - serverless-plugin-log-subscription
 
 functions:
   lambda1:
@@ -25,6 +26,20 @@ functions:
 custom:
   pythonRequirements:
     dockerizePip: true
+
+  logSubscription:
+    destinationArn:
+      Fn::GetAtt:
+        - LogFirehose
+        - Arn
+    filterPattern: ""
+    stages:
+      - dev
+    logGroups:
+      - /aws/lambda/logstreaming-dev-lambda1
+      - /aws/lambda/logstreaming-dev-lambda2
+      - /aws/lambda/logstreaming-dev-lambda3
+      - /aws/lambda/logstreaming-dev-lambda4
 
 resources:
   Resources:
