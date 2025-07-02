@@ -26,6 +26,10 @@ custom:
       Fn::GetAtt:
         - LogFirehose
         - Arn
+    roleArn:
+      Fn::GetAtt:
+        - LogSubscriptionRole
+        - Arn
     filterPattern: ""
 
 package:
@@ -45,4 +49,5 @@ resources:
   Resources:
     LogFirehose: ${file(resources/firehose.yml)}
     LogBucket: ${file(resources/s3.yml)}
-    FirehoseRole: ${file(resources/iam.yml)}
+    FirehoseRole: ${file(resources/firehose_role.yml)}
+    LogSubscriptionRole: ${file(resources/log_subscription_role.yml)}

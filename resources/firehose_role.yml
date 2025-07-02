@@ -22,4 +22,4 @@ Properties:
               - logs:DescribeLogStreams
               - logs:GetLogEvents
               - logs:FilterLogEvents
-            Resource: "*"
+            Resource: "*" 
