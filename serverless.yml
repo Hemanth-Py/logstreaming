@@ -26,8 +26,6 @@ custom:
         - LogFirehose
         - Arn
     filterPattern: ""
-    stages:
-      - dev
 
 package:
   individually: true
