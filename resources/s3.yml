@@ -1,5 +1,3 @@
-Resources:
-  LogBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Sub "${AWS::StackName}-logs"
+Type: AWS::S3::Bucket
+Properties:
+  BucketName: !Sub "${AWS::StackName}-logs"

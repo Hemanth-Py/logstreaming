@@ -1,27 +1,25 @@
-Resources:
-  FirehoseRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
+Type: AWS::IAM::Role
+Properties:
+  AssumeRolePolicyDocument:
+    Version: "2012-10-17"
+    Statement:
+      - Effect: Allow
+        Principal:
+          Service: firehose.amazonaws.com
+        Action: sts:AssumeRole
+  Policies:
+    - PolicyName: FirehoseS3Policy
+      PolicyDocument:
         Version: "2012-10-17"
         Statement:
           - Effect: Allow
-            Principal:
-              Service: firehose.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: FirehoseS3Policy
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - s3:PutObject
-                Resource: !Sub "arn:aws:s3:::${LogBucket}/*"
-              - Effect: Allow
-                Action:
-                  - logs:DescribeLogGroups
-                  - logs:DescribeLogStreams
-                  - logs:GetLogEvents
-                  - logs:FilterLogEvents
-                Resource: "*"
+            Action:
+              - s3:PutObject
+            Resource: !Sub "arn:aws:s3:::${LogBucket}/*"
+          - Effect: Allow
+            Action:
+              - logs:DescribeLogGroups
+              - logs:DescribeLogStreams
+              - logs:GetLogEvents
+              - logs:FilterLogEvents
+            Resource: "*"

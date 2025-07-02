@@ -41,6 +41,7 @@ functions:
   demo_four: ${file(resources/demo_four.yml)}
 
 resources:
-  - ${file(resources/s3.yml)}
-  - ${file(resources/iam.yml)}
-  - ${file(resources/firehose.yml)}
+  Resources:
+    LogFirehose: ${file(resources/firehose.yml)}
+    LogBucket: ${file(resources/s3.yml)}
+    FirehoseRole: ${file(resources/iam.yml)}
