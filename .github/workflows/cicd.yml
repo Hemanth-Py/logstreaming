@@ -34,4 +34,4 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
       - name: Deploy with Serverless
-        run: npx serverless deploy --stage dev --region ap-south-1 
+        run: npx serverless deploy --stage dev --region ap-south-1 --verbose 
