@@ -5,4 +5,5 @@ name: ${self:service}-demo_one-${self:provider.stage}
 
 package:
   patterns:
+    - "!./**"
     - demo_lambdas/demo_one.py
