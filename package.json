@@ -1,0 +1,39 @@
+{
+  "name": "logstreaming",
+  "version": "1.0.0",
+  "description": "Logstreaming backend",
+  "devDependencies": {
+    "@serverless/cli": "^1.6.0",
+    "apidoc": "^1.2.0",
+    "live-server": "^1.2.2",
+    "sendgrid": "^5.2.3",
+    "serverless": "^3.36.0",
+    "serverless-dotenv-plugin": "^2.4.2",
+    "serverless-plugin-split-stacks": "1.9.3",
+    "serverless-prune-plugin": "^1.4.3",
+    "serverless-pseudo-parameters": "^2.5.0",
+    "serverless-python-requirements": "^5.4.0",
+    "serverless-step-functions": "^3.11.1",
+    "serverless-wsgi": "^1.7.5",
+    "serverless-appsync-plugin": "^2.9.1",
+    "serverless-plugin-log-retention": "^2.0.1",
+    "serverless-plugin-log-subscription": "^3.0.0"
+  },
+  "main": "",
+  "scripts": {
+    "test": "python -m pytest tests/",
+    "offline": "sls offline start",
+    "apidoc": "apidoc -i ./ -e node_modules -e ApiDocs -e deprecated -o ApiDocs/html-docs/",
+    "webservicedocs": "apidoc -i ./WebServices-ApiDocs/ -o WebServices-ApiDocs/html-docs/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Hemanth-Py/logstreaming.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hemanth-Py/logstreaming/issues"
+  },
+  "homepage": "https://github.com/Hemanth-Py/logstreaming#readme"
+} 
