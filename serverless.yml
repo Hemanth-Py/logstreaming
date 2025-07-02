@@ -37,10 +37,10 @@ package:
     - "!package.json"
 
 functions:
-  ${file(resources/demo_one.yml)}
-  ${file(resources/demo_two.yml)}
-  ${file(resources/demo_three.yml)}
-  ${file(resources/demo_four.yml)}
+  demo_one: ${file(resources/demo_one.yml)}
+  demo_two: ${file(resources/demo_two.yml)}
+  demo_three: ${file(resources/demo_three.yml)}
+  demo_four: ${file(resources/demo_four.yml)}
 
 resources:
   - ${file(resources/s3.yml)}

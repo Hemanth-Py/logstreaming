@@ -1,11 +1,10 @@
-demo_two:
-  handler: demo_two.lambda_handler
-  module: demo_two
-  name: ${self:service}-demo_two-${self:provider.stage}
-  timeout: 10
-  memorySize: 128
-  # layers:
-  #   - { Ref: UtilsLambdaLayer }
-  package:
-    patterns:
-      - demo_two/**
+handler: demo_two.lambda_handler
+module: demo_two
+name: ${self:service}-demo_two-${self:provider.stage}
+timeout: 10
+memorySize: 128
+# layers:
+#   - { Ref: UtilsLambdaLayer }
+package:
+  patterns:
+    - demo_two/**
