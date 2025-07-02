@@ -1,0 +1,70 @@
+service: logstreaming
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: python3.11
+  region: us-east-1
+  stage: dev
+  logRetentionInDays: 7
+
+plugins:
+  - serverless-python-requirements
+
+functions:
+  lambda1:
+    handler: lambdas/lambda1.handler
+  lambda2:
+    handler: lambdas/lambda2.handler
+  lambda3:
+    handler: lambdas/lambda3.handler
+  lambda4:
+    handler: lambdas/lambda4.handler
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+
+resources:
+  Resources:
+    LogBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: !Sub "${AWS::StackName}-logs"
+
+    FirehoseRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: firehose.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: FirehoseS3Policy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - s3:PutObject
+                  Resource: !Sub "arn:aws:s3:::${LogBucket}/*"
+                - Effect: Allow
+                  Action:
+                    - logs:DescribeLogGroups
+                    - logs:DescribeLogStreams
+                    - logs:GetLogEvents
+                    - logs:FilterLogEvents
+                  Resource: "*"
+
+    LogFirehose:
+      Type: AWS::KinesisFirehose::DeliveryStream
+      Properties:
+        DeliveryStreamType: DirectPut
+        S3DestinationConfiguration:
+          BucketARN: !GetAtt LogBucket.Arn
+          RoleARN: !GetAtt FirehoseRole.Arn
+          Prefix: "logs/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/"
