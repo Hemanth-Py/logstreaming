@@ -15,13 +15,13 @@ plugins:
 
 functions:
   lambda1:
-    handler: lambdas/lambda1.handler
+    handler: lambdas/lambda1/handler.handler
   lambda2:
-    handler: lambdas/lambda2.handler
+    handler: lambdas/lambda2/handler.handler
   lambda3:
-    handler: lambdas/lambda3.handler
+    handler: lambdas/lambda3/handler.handler
   lambda4:
-    handler: lambdas/lambda4.handler
+    handler: lambdas/lambda4/handler.handler
 
 custom:
   pythonRequirements:
@@ -42,44 +42,6 @@ custom:
       - /aws/lambda/logstreaming-dev-lambda4
 
 resources:
-  Resources:
-    LogBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: !Sub "${AWS::StackName}-logs"
-
-    FirehoseRole:
-      Type: AWS::IAM::Role
-      Properties:
-        AssumeRolePolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Effect: Allow
-              Principal:
-                Service: firehose.amazonaws.com
-              Action: sts:AssumeRole
-        Policies:
-          - PolicyName: FirehoseS3Policy
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                - Effect: Allow
-                  Action:
-                    - s3:PutObject
-                  Resource: !Sub "arn:aws:s3:::${LogBucket}/*"
-                - Effect: Allow
-                  Action:
-                    - logs:DescribeLogGroups
-                    - logs:DescribeLogStreams
-                    - logs:GetLogEvents
-                    - logs:FilterLogEvents
-                  Resource: "*"
-
-    LogFirehose:
-      Type: AWS::KinesisFirehose::DeliveryStream
-      Properties:
-        DeliveryStreamType: DirectPut
-        S3DestinationConfiguration:
-          BucketARN: !GetAtt LogBucket.Arn
-          RoleARN: !GetAtt FirehoseRole.Arn
-          Prefix: "logs/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/"
+  - ${file(resources/s3.yml)}
+  - ${file(resources/iam.yml)}
+  - ${file(resources/firehose.yml)}
