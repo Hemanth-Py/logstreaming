@@ -1,31 +1,24 @@
 service: logstreaming
-
-frameworkVersion: "3"
+useDotenv: true
+configValidationMode: error
 
 provider:
   name: aws
+  deploymentMethod: direct
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'ap-south-1'}
   runtime: python3.11
-  region: ap-south-1
-  stage: dev
+  memorySize: 128
+  timeout: 10
   logRetentionInDays: 7
 
 plugins:
   - serverless-python-requirements
   - serverless-plugin-log-subscription
 
-functions:
-  lambda1:
-    handler: lambdas/lambda1/handler.handler
-  lambda2:
-    handler: lambdas/lambda2/handler.handler
-  lambda3:
-    handler: lambdas/lambda3/handler.handler
-  lambda4:
-    handler: lambdas/lambda4/handler.handler
-
 custom:
   pythonRequirements:
-    dockerizePip: true
+    dockerizePip: false
 
   logSubscription:
     destinationArn:
@@ -40,6 +33,19 @@ custom:
       - /aws/lambda/logstreaming-dev-lambda2
       - /aws/lambda/logstreaming-dev-lambda3
       - /aws/lambda/logstreaming-dev-lambda4
+
+package:
+  individually: true
+  patterns:
+    - "!node_modules/**"
+    - "!requirements.txt"
+    - "!package.json"
+
+functions:
+  ${file(resources/demo_one.yml)}
+  ${file(resources/demo_two.yml)}
+  ${file(resources/demo_three.yml)}
+  ${file(resources/demo_four.yml)}
 
 resources:
   - ${file(resources/s3.yml)}

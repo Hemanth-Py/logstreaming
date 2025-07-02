@@ -1,0 +1,11 @@
+demo_three:
+  handler: demo_three.lambda_handler
+  module: demo_three
+  name: ${self:service}-demo_three-${self:provider.stage}
+  timeout: 10
+  memorySize: 128
+  # layers:
+  #   - { Ref: UtilsLambdaLayer }
+  package:
+    patterns:
+      - demo_three/**

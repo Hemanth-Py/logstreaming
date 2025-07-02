@@ -1,0 +1,11 @@
+demo_four:
+  handler: demo_four.lambda_handler
+  module: demo_four
+  name: ${self:service}-demo_four-${self:provider.stage}
+  timeout: 10
+  memorySize: 128
+  # layers:
+  #   - { Ref: UtilsLambdaLayer }
+  package:
+    patterns:
+      - demo_four/**
