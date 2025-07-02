@@ -28,11 +28,6 @@ custom:
     filterPattern: ""
     stages:
       - dev
-    logGroups:
-      - /aws/lambda/logstreaming-dev-lambda1
-      - /aws/lambda/logstreaming-dev-lambda2
-      - /aws/lambda/logstreaming-dev-lambda3
-      - /aws/lambda/logstreaming-dev-lambda4
 
 package:
   individually: true
