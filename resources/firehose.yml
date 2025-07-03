@@ -6,3 +6,7 @@ Properties:
     RoleARN: !GetAtt FirehoseRole.Arn
     Prefix: "logs/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/"
     ErrorOutputPrefix: "logs-errors/!{firehose:error-output-type}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/"
+    CompressionFormat: GZIP
+    BufferingHints:
+      IntervalInSeconds: 60
+      SizeInMBs: 1
