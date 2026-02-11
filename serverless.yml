@@ -24,7 +24,7 @@ custom:
     enabled: true
     destinationArn:
       Fn::GetAtt:
-        - LogFirehose
+        - LogFirehoseV2
         - Arn
     roleArn:
       Fn::GetAtt:
@@ -47,7 +47,7 @@ functions:
 
 resources:
   Resources:
-    LogFirehose: ${file(resources/firehose.yml)}
+    LogFirehoseV2: ${file(resources/firehose.yml)}
     LogBucket: ${file(resources/s3.yml)}
     FirehoseRole: ${file(resources/firehose_role.yml)}
     LogSubscriptionRole: ${file(resources/log_subscription_role.yml)}
