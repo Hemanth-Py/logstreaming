@@ -1,7 +1,7 @@
 Type: AWS::KinesisFirehose::DeliveryStream
 Properties:
   DeliveryStreamType: DirectPut
-  S3DestinationConfiguration:
+  ExtendedS3DestinationConfiguration:
     BucketARN: !GetAtt LogBucket.Arn
     RoleARN: !GetAtt FirehoseRole.Arn
     Prefix: "logs/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/"
@@ -10,9 +10,9 @@ Properties:
     ProcessingConfiguration:
       Enabled: true
       Processors:
-        - Type: RecordDecompression
+        - Type: Decompression
           Parameters:
-            - ParameterName: SubType
+            - ParameterName: CompressionFormat
               ParameterValue: GZIP
     BufferingHints:
       IntervalInSeconds: 60
