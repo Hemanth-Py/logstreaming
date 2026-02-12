@@ -6,27 +6,48 @@ A production-grade, cost-optimized pipeline to stream AWS CloudWatch logs to S3 
 
 ## 📊 Data Flow Architecture
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-View_Animation-blue?style=for-the-badge&logo=opsgenie)](https://Hemanth-Py.github.io/logstreaming/workflow.html)
+
 ```mermaid
 graph LR
-    A[Lambda Functions] -->|Logs| B(CloudWatch Logs)
-    B -->|Subscription Filter| C{Kinesis Data Firehose}
-    C -->|1. Native Decompression| D[Processing]
-    D -->|2. Add Newline Delimiter| D
-    D -->|3. GZIP Compression| E[(Amazon S3)]
-    E -->|Partition Projection| F[Amazon Athena]
-    F -->|SQL Query| G[User/Developer]
+    %% Styles
+    classDef lambda fill:#FF9900,stroke:#232F3E,color:white;
+    classDef cw fill:#E05243,stroke:#232F3E,color:white;
+    classDef firehose fill:#693CC5,stroke:#232F3E,color:white;
+    classDef s3 fill:#3F8624,stroke:#232F3E,color:white;
+    classDef athena fill:#00A4A6,stroke:#232F3E,color:white;
+    classDef user fill:#232F3E,stroke:#232F3E,color:white;
+
+    %% Nodes
+    A[Lambda Functions]:::lambda -->|Logs| B(CloudWatch Logs):::cw
+    B -->|Subscription Filter| C{Kinesis Firehose}:::firehose
+    C -->|1. Decompress| C
+    C -->|2. Delimit| C
+    C -->|3. GZIP| D[(Amazon S3)]:::s3
+    D -->|Partition Projection| E[Amazon Athena]:::athena
+    E -->|SQL Query| F[User Analysis]:::user
 
     subgraph "Ingestion & Storage"
     C
     D
-    E
     end
 
     subgraph "Analysis"
+    E
     F
-    G
     end
 ```
+
+## 🧠 How It Works (The "Secret Sauce")
+
+This pipeline solves the common "Concatenated JSON" problem without writing a single line of custom code.
+
+1.  **Ingestion:** Lambda functions output logs. CloudWatch automatically compresses them into **GZIP** blobs.
+2.  **Firehose Processing:**
+    *   **Decompression:** Firehose natively "unzips" the incoming GZIP blob into raw text.
+    *   **Delimiting:** A specific processor appends a `\n` (newline) character to every record.
+    *   **Re-compression:** The clean, newline-separated JSON is Gzipped again for efficient storage.
+3.  **Athena Analysis:** Because every record is on its own line (`\n`), Athena's JSON parser can read millions of logs in seconds without getting stuck on the first line.
 
 ---
 
