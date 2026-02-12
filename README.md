@@ -6,7 +6,7 @@ A production-grade, cost-optimized pipeline to stream AWS CloudWatch logs to S3 
 
 ## 📊 Data Flow Architecture
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-View_Animation-blue?style=for-the-badge&logo=opsgenie)](https://Hemanth-Py.github.io/logstreaming/workflow.html)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-View_Animation-blue?style=for-the-badge&logo=opsgenie)](https://Hemanth-Py.github.io/logstreaming/)
 
 ```mermaid
 graph LR
