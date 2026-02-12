@@ -1,0 +1,6 @@
+InpuData/
+InputData/
+.idea/
+node_modules/
+.serverless/
+*.log
