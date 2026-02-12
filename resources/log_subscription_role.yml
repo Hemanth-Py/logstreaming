@@ -16,4 +16,4 @@ Properties:
             Action:
               - firehose:PutRecord
               - firehose:PutRecordBatch
-            Resource: !GetAtt LogFirehoseV3.Arn 
+            Resource: !GetAtt LogFirehoseV4.Arn 

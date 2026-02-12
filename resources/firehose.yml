@@ -17,7 +17,7 @@ Properties:
         - Type: AppendDelimiterToRecord
           Parameters:
             - ParameterName: Delimiter
-              ParameterValue: "\n"
+              ParameterValue: "\\n"
     BufferingHints:
       SizeInMBs: 1
       IntervalInSeconds: 60
