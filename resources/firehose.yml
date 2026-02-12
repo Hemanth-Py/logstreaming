@@ -15,8 +15,5 @@ Properties:
             - ParameterName: CompressionFormat
               ParameterValue: GZIP
     BufferingHints:
-      IntervalInSeconds: 60
       SizeInMBs: 1
-    RecordFormatConfiguration:
-      TextFormatConfiguration:
-        RecordSeparator: "\n"
+      IntervalInSeconds: 60
