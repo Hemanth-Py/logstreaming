@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS Log Streaming Pipeline - Live Visualization</title>
+    <title>AWS Log Streaming Pipeline - Clean Visualization</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body, html {
@@ -11,47 +11,23 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #0F172A; /* Dark Slate - Makes colors pop more */
+            background-color: #F8FAFC; /* Clean White/Grey background */
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Inter', -apple-system, sans-serif;
         }
-        #ui-overlay {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: #94A3B8;
-            font-size: 14px;
-            pointer-events: none;
-            z-index: 10;
-        }
-        #stats-panel {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(8px);
-            padding: 12px 20px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            z-index: 10;
-        }
-        .stat-label { color: #94A3B8; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-value { font-size: 20px; font-weight: 700; color: #38BDF8; font-family: monospace; }
-        
         #canvas-container {
             width: 95%;
             max-width: 1400px;
             aspect-ratio: 21 / 9;
             position: relative;
-            background: #1E293B;
-            border-radius: 32px;
-            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5);
+            background: #FFFFFF;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
         }
         canvas {
             display: block;
@@ -62,25 +38,6 @@
 </head>
 <body>
 
-    <div id="ui-overlay">
-        <h1 class="text-white text-2xl font-bold mb-1">Serverless Log Streaming</h1>
-        <p>Real-time Visualization of the CloudWatch ➔ Firehose ➔ S3 ➔ Athena Pipeline</p>
-    </div>
-
-    <div id="stats-panel">
-        <div>
-            <div class="stat-label">Total Logs Processed</div>
-            <div id="log-count" class="stat-value">0000</div>
-        </div>
-        <div class="mt-2 pt-2 border-t border-white/10">
-            <div class="stat-label">Pipeline Status</div>
-            <div id="pipeline-status" class="text-xs text-green-400 flex items-center gap-2">
-                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                ACTIVE & OPTIMIZED
-            </div>
-        </div>
-    </div>
-
     <div id="canvas-container">
         <canvas id="pipelineCanvas" width="1400" height="600"></canvas>
     </div>
@@ -88,20 +45,17 @@
     <script>
         const canvas = document.getElementById('pipelineCanvas');
         const ctx = canvas.getContext('2d');
-        const logCountEl = document.getElementById('log-count');
 
         const width = canvas.width;
         const height = canvas.height;
         const centerY = height / 2;
 
-        let totalProcessed = 0;
-
         const nodes = [
-            { id: 'lambda', name: "AWS Lambda", x: 200, color: "#FF9900", icon: drawLambda, pulse: 0 },
-            { id: 'cw', name: "CloudWatch", x: 450, color: "#E7157B", icon: drawCloudWatch, pulse: 0 },
-            { id: 'firehose', name: "Kinesis Firehose", x: 700, color: "#8C4FFF", icon: drawFirehose, pulse: 0 },
-            { id: 's3', name: "Amazon S3", x: 950, color: "#3F8624", icon: drawS3, pulse: 0 },
-            { id: 'athena', name: "Amazon Athena", x: 1200, color: "#1292B4", icon: drawAthena, pulse: 0 }
+            { name: "AWS Lambda", x: 200, color: "#FF9900", icon: drawLambda },
+            { name: "CloudWatch", x: 450, color: "#E7157B", icon: drawCloudWatch },
+            { name: "Kinesis Firehose", x: 700, color: "#8C4FFF", icon: drawFirehose },
+            { name: "Amazon S3", x: 950, color: "#3F8624", icon: drawS3 },
+            { name: "Amazon Athena", x: 1200, color: "#1292B4", icon: drawAthena }
         ];
 
         let particles = [];
@@ -113,47 +67,31 @@
                 this.x = x;
                 this.y = y;
                 this.active = true;
-                this.glow = 0;
-                this.type = 'GZ'; // Start as Gzip
+                this.type = 'GZ';
             }
 
             update() {
                 let speed = 3.5;
-
-                // CloudWatch Compression Zone
                 if (this.x > nodes[1].x && this.x < nodes[2].x) {
                     speed = 1.2;
-                    nodes[1].pulse = 1;
-                } 
-                // Firehose Transformation Zone
-                else if (this.x >= nodes[2].x && this.x < nodes[3].x) {
+                } else if (this.x >= nodes[2].x && this.x < nodes[3].x) {
                     speed = 6.5;
-                    this.type = 'JSON'; // Transformed to JSON
-                    nodes[2].pulse = 1;
+                    this.type = 'JSON';
                 }
 
                 this.x += speed;
-                this.glow = Math.min(1, this.glow + 0.1);
 
                 if (this.x >= nodes[3].x) {
                     this.active = false;
                     folderPulse = 1.0;
-                    nodes[3].pulse = 1;
-                    totalProcessed++;
-                    if (totalProcessed % 5 === 0) {
-                        logCountEl.innerText = totalProcessed.toString().padStart(4, '0');
-                    }
                 }
             }
 
             draw(ctx) {
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.type === 'GZ' ? 3 : 5, 0, Math.PI * 2);
-                ctx.fillStyle = this.type === 'GZ' ? '#FDA4AF' : '#7DD3FC';
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = this.type === 'GZ' ? '#E11D48' : '#0EA5E9';
+                ctx.arc(this.x, this.y, this.type === 'GZ' ? 4 : 5, 0, Math.PI * 2);
+                ctx.fillStyle = this.type === 'GZ' ? '#E11D48' : '#0EA5E9';
                 ctx.fill();
-                ctx.shadowBlur = 0;
             }
         }
 
@@ -161,39 +99,19 @@
             ctx.beginPath();
             ctx.moveTo(nodes[0].x, centerY);
             ctx.lineTo(nodes[3].x, centerY);
-            ctx.strokeStyle = 'rgba(51, 65, 85, 0.5)';
+            ctx.strokeStyle = '#E2E8F0';
             ctx.lineWidth = 14;
             ctx.lineCap = 'round';
             ctx.stroke();
-
-            ctx.beginPath();
-            ctx.moveTo(nodes[0].x, centerY);
-            ctx.lineTo(nodes[3].x, centerY);
-            ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
-            ctx.lineWidth = 2;
-            ctx.stroke();
         }
 
-        function drawRoundedRect(x, y, w, h, r, color, pulse) {
-            ctx.save();
+        function drawIconBase(x, y, color) {
             ctx.fillStyle = color;
-            
-            // Add pulse glow
-            if (pulse > 0) {
-                ctx.shadowColor = color;
-                ctx.shadowBlur = 30 * pulse;
-            } else {
-                ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-                ctx.shadowBlur = 20;
-            }
-            
             ctx.beginPath();
-            ctx.roundRect(x, y, w, h, r);
+            ctx.roundRect(x - 40, y - 40, 80, 80, 20);
             ctx.fill();
-            ctx.restore();
         }
 
-        // Icons
         function drawLambda(x, y) {
             ctx.strokeStyle = '#FFFFFF';
             ctx.lineWidth = 4;
@@ -220,13 +138,11 @@
             ctx.lineTo(x + 6, y + 12); ctx.lineTo(x - 6, y + 12);
             ctx.fill();
             
-            // Action Indicators
-            ctx.font = 'bold 9px monospace';
-            ctx.fillStyle = '#A78BFA';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillStyle = '#475569';
             ctx.textAlign = 'center';
-            ctx.fillText("UNZIP", x, y - 25);
-            ctx.fillText("+ 
-", x, y + 28);
+            ctx.fillText("UNZIP", x, y - 45);
+            ctx.fillText("+ \\n", x, y + 55);
         }
 
         function drawS3(x, y) {
@@ -250,21 +166,16 @@
             ctx.stroke();
         }
 
-        function drawFoldersInS3(x, y) {
-            const offsetY = folderPulse * 5;
-            const drawSingleFolder = (fx, fy, alpha) => {
+        function drawFolders(x, y) {
+            const drawF = (fx, fy, alpha) => {
                 ctx.fillStyle = `rgba(234, 179, 8, ${alpha})`;
                 ctx.beginPath();
                 ctx.roundRect(fx - 12, fy - 6, 24, 16, 2);
                 ctx.fill();
-                ctx.fillStyle = `rgba(253, 224, 71, ${alpha})`;
-                ctx.beginPath();
-                ctx.roundRect(fx - 12, fy - 2, 24, 12, 2);
-                ctx.fill();
             };
-            drawSingleFolder(x, y + 25 + offsetY, 0.4);
-            drawSingleFolder(x, y + 15 + offsetY * 0.5, 0.7);
-            drawSingleFolder(x, y + 5, 1.0);
+            drawF(x, y + 25, 0.4);
+            drawF(x, y + 15, 0.7);
+            drawF(x, y + 5, 1.0);
         }
 
         function animate(time) {
@@ -279,36 +190,27 @@
                 else particles[i].draw(ctx);
             }
 
-            folderPulse = Math.max(0, folderPulse - 0.05);
-            drawFoldersInS3(nodes[3].x, centerY);
+            drawFolders(nodes[3].x, centerY);
 
             nodes.forEach(node => {
-                const size = 80;
-                node.pulse = Math.max(0, node.pulse - 0.05);
-                drawRoundedRect(node.x - size/2, centerY - size/2, size, size, 24, node.color, node.pulse);
+                drawIconBase(node.x, centerY, node.color);
                 node.icon(node.x, centerY);
-                
-                ctx.fillStyle = '#94A3B8';
-                ctx.font = '600 13px Inter';
+                ctx.fillStyle = '#475569';
+                ctx.font = '600 14px sans-serif';
                 ctx.textAlign = 'center';
-                ctx.fillText(node.name, node.x, centerY + 65);
+                ctx.fillText(node.name, node.x, centerY + 70);
             });
 
-            // Athena Scanner
-            const magX = nodes[3].x + Math.sin(time * 0.002) * 50;
+            // Scanner
+            const magX = nodes[3].x + Math.sin(time * 0.002) * 40;
             const magY = centerY - 80;
             ctx.beginPath();
-            ctx.moveTo(nodes[4].x, centerY);
-            ctx.lineTo(magX, magY);
-            ctx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
-            ctx.stroke();
-            
-            ctx.beginPath();
-            ctx.arc(magX, magY, 18, 0, Math.PI*2);
-            ctx.fillStyle = '#1E293B';
-            ctx.fill();
+            ctx.arc(magX, magY, 15, 0, Math.PI*2);
             ctx.strokeStyle = '#1292B4';
             ctx.lineWidth = 4;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(magX + 10, magY + 10); ctx.lineTo(magX + 18, magY + 18);
             ctx.stroke();
 
             frameCount++;
