@@ -2,6 +2,8 @@
 
 A production-grade, cost-optimized pipeline to stream AWS CloudWatch logs to S3 for SQL-based analysis in Amazon Athena. This project is built using the Serverless Framework and utilizes native AWS features to avoid custom Lambda processing costs.
 
+![Pipeline Workflow](workflow.gif)
+
 ---
 
 ## 📊 Data Flow Architecture
