@@ -17,3 +17,6 @@ Properties:
     BufferingHints:
       IntervalInSeconds: 60
       SizeInMBs: 1
+    RecordFormatConfiguration:
+      TextFormatConfiguration:
+        RecordSeparator: "\n"
