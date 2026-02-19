@@ -132,7 +132,7 @@ ORDER BY event_time DESC;
 ## 💡 Lessons Learned & Pro-Tips
 *   **Newline Delimiters:** Without the `AppendDelimiterToRecord` processor, Athena will only read the first record of every S3 file.
 *   **Double Gzipping:** Never set Firehose to Gzip *without* first decompressing the CloudWatch source. Athena cannot read nested Gzip files.
-*   **Resource Recreation:** When adding native processors to an existing Firehose stream, CloudFormation may fail. Renaming the resource (e.g., `LogFirehoseV4`) forces a clean recreation and solves the issue.
+*   **Resource Recreation:** When adding native processors to an existing Firehose stream, CloudFormation may fail. Renaming the resource (e.g., `LogFirehoseV5`) forces a clean recreation and solves the issue.
 
 ---
 **Summary:** This pipeline is built for scale, performance, and cost-efficiency. By following this guide, you have implemented a production-grade logging solution.
