@@ -4,9 +4,12 @@ Properties:
   ExtendedS3DestinationConfiguration:
     BucketARN: !GetAtt LogBucket.Arn
     RoleARN: !GetAtt FirehoseRole.Arn
-    Prefix: "logs/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/"
-    ErrorOutputPrefix: "logs-errors/!{firehose:error-output-type}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/"
-    CompressionFormat: GZIP
+    Prefix: "logs/logGroup=!{partitionKeyFromQuery:logGroup}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/"
+    ErrorOutputPrefix: "logs-errors/!{firehose:error-output-type}/"
+    DynamicPartitioningConfiguration:
+      Enabled: true
+      RetryOptions:
+        DurationInSeconds: 300
     ProcessingConfiguration:
       Enabled: true
       Processors:
@@ -14,10 +17,17 @@ Properties:
           Parameters:
             - ParameterName: CompressionFormat
               ParameterValue: GZIP
+        - Type: MetadataExtraction
+          Parameters:
+            - ParameterName: MetadataExtractionQuery
+              ParameterValue: '{logGroup: .logGroup}'
+            - ParameterName: JsonParsingEngine
+              ParameterValue: JQ-1.6
         - Type: AppendDelimiterToRecord
           Parameters:
             - ParameterName: Delimiter
               ParameterValue: "\\n"
     BufferingHints:
-      SizeInMBs: 1
-      IntervalInSeconds: 60
+      IntervalInSeconds: 300  # Buffer time before writing helps to reduce the number of writes
+      SizeInMBs: 5
+    CompressionFormat: GZIP
