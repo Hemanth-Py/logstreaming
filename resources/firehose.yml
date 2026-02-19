@@ -29,5 +29,5 @@ Properties:
               ParameterValue: "\\n"
     BufferingHints:
       IntervalInSeconds: 300  # Buffer time before writing helps to reduce the number of writes
-      SizeInMBs: 5
+      SizeInMBs: 64
     CompressionFormat: GZIP
