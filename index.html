@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +8,28 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0F172A; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .node-active { filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.5)); }
-        pre { scrollbar-width: thin; scrollbar-color: #334155 #0F172A; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A;
+        }
+
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .node-active {
+            filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.5));
+        }
+
+        pre {
+            scrollbar-width: thin;
+            scrollbar-color: #334155 #0F172A;
+        }
     </style>
 </head>
+
 <body class="h-screen w-screen flex overflow-hidden text-slate-200">
 
     <!-- Sidebar / Code Panel -->
@@ -25,9 +42,11 @@
         <div id="code-container" class="flex-1 overflow-hidden flex flex-col">
             <div class="flex items-center justify-between mb-2">
                 <span id="file-name" class="text-xs font-mono text-sky-300">serverless.yml</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-slate-400 font-mono uppercase tracking-wider">Infrastructure</span>
+                <span
+                    class="px-2 py-1 rounded bg-slate-800 text-[10px] text-slate-400 font-mono uppercase tracking-wider">Infrastructure</span>
             </div>
-            <pre id="code-block" class="flex-1 bg-[#011627] p-4 rounded-lg overflow-auto text-sm font-mono leading-relaxed text-slate-300 border border-slate-800 shadow-inner">service: logstreaming
+            <pre id="code-block"
+                class="flex-1 bg-[#011627] p-4 rounded-lg overflow-auto text-sm font-mono leading-relaxed text-slate-300 border border-slate-800 shadow-inner">service: logstreaming
 useDotenv: true
 configValidationMode: error
 
@@ -84,8 +103,12 @@ resources:
         </div>
 
         <div class="mt-6 pt-6 border-t border-slate-800">
-            <a href="https://github.com/Hemanth-Py/logstreaming" target="_blank" class="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-900 font-bold transition-all shadow-lg shadow-sky-500/20">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            <a href="https://github.com/Hemanth-Py/logstreaming" target="_blank"
+                class="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-900 font-bold transition-all shadow-lg shadow-sky-500/20">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                </svg>
                 View Repository
             </a>
         </div>
@@ -102,12 +125,155 @@ resources:
         const codeBlock = document.getElementById('code-block');
         const fileName = document.getElementById('file-name');
 
+        const lambdaCode = `handler: demo_one.lambda_handler
+module: demo_lambdas
+name: \${self:service}-demo_one-\${self:provider.stage}
+
+package:
+  patterns:
+    - "!./**"
+    - demo_lambdas/demo_one.py`;
+
+        const serverlessCode = `service: logstreaming
+useDotenv: true
+configValidationMode: error
+
+provider:
+  name: aws
+  deploymentMethod: direct
+  stage: \${opt:stage, 'dev'}
+  region: \${opt:region, 'ap-south-1'}
+  runtime: python3.11
+  memorySize: 128
+  timeout: 10
+  logRetentionInDays: 7
+
+plugins:
+  - serverless-python-requirements
+  - serverless-plugin-log-subscription
+
+custom:
+  pythonRequirements:
+    dockerizePip: false
+
+  logSubscription:
+    enabled: true
+    destinationArn:
+      Fn::GetAtt:
+        - LogFirehoseV5
+        - Arn
+    roleArn:
+      Fn::GetAtt:
+        - LogSubscriptionRole
+        - Arn
+    filterPattern: ""
+
+package:
+  individually: true
+  patterns:
+    - "!node_modules/**"
+    - "!requirements.txt"
+    - "!package.json"
+
+functions:
+  demo_one: \${file(resources/demo_one.yml)}
+  demo_two: \${file(resources/demo_two.yml)}
+  demo_three: \${file(resources/demo_three.yml)}
+  demo_four: \${file(resources/demo_four.yml)}
+
+resources:
+  Resources:
+    LogFirehoseV5: \${file(resources/firehose.yml)}
+    LogBucket: \${file(resources/s3.yml)}
+    FirehoseRole: \${file(resources/firehose_role.yml)}
+    LogSubscriptionRole: \${file(resources/log_subscription_role.yml)}`;
+
+        const firehoseCode = `Type: AWS::KinesisFirehose::DeliveryStream
+Properties:
+  DeliveryStreamType: DirectPut
+  ExtendedS3DestinationConfiguration:
+    BucketARN: !GetAtt LogBucket.Arn
+    RoleARN: !GetAtt FirehoseRole.Arn
+    Prefix: "logs/logGroup=!{partitionKeyFromQuery:logGroup}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/"
+    ErrorOutputPrefix: "logs-errors/!{firehose:error-output-type}/"
+    DynamicPartitioningConfiguration:
+      Enabled: true
+      RetryOptions:
+        DurationInSeconds: 300
+    ProcessingConfiguration:
+      Enabled: true
+      Processors:
+        - Type: Decompression
+          Parameters:
+            - ParameterName: CompressionFormat
+              ParameterValue: GZIP
+        - Type: MetadataExtraction
+          Parameters:
+            - ParameterName: MetadataExtractionQuery
+              ParameterValue: '{logGroup: .logGroup}'
+            - ParameterName: JsonParsingEngine
+              ParameterValue: JQ-1.6
+        - Type: AppendDelimiterToRecord
+          Parameters:
+            - ParameterName: Delimiter
+              ParameterValue: "\\\\n"
+    BufferingHints:
+      IntervalInSeconds: 300
+      SizeInMBs: 64
+    CompressionFormat: GZIP`;
+
+        const s3Code = `Type: AWS::S3::Bucket
+Properties:
+  BucketName: !Sub "\${AWS::StackName}-logs"`;
+
+        const athenaCode = `-- Optimized Athena table for CloudWatch logs
+-- This table handles the native CloudWatch logs JSON structure
+CREATE EXTERNAL TABLE IF NOT EXISTS cloudwatch_logs (
+  messageType STRING,
+  owner STRING,
+  logGroup STRING,
+  logStream STRING,
+  subscriptionFilters ARRAY<STRING>,
+  logEvents ARRAY<STRUCT<
+    id: STRING,
+    timestamp: BIGINT,
+    message: STRING
+  >>
+)
+PARTITIONED BY (
+  year STRING,
+  month STRING,
+  day STRING,
+  hour STRING
+)
+ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
+WITH SERDEPROPERTIES (
+  'ignore.malformed.json' = 'true',
+  'case.insensitive' = 'true'
+)
+LOCATION 's3://logstreaming-dev-logs/logs/'
+TBLPROPERTIES (
+  'projection.enabled' = 'true',
+  'projection.year.type' = 'integer',
+  'projection.year.range' = '2024,2030',
+  'projection.month.type' = 'integer',
+  'projection.month.range' = '1,12',
+  'projection.month.digits' = '2',
+  'projection.day.type' = 'integer',
+  'projection.day.range' = '1,31',
+  'projection.day.digits' = '2',
+  'projection.hour.type' = 'integer',
+  'projection.hour.range' = '0,23',
+  'projection.hour.digits' = '2',
+  'storage.location.template' = 's3://logstreaming-dev-logs/logs/year=\${year}/month=\${month}/day=\${day}/hour=\${hour}'
+);`;
+
         const configs = {
-            "AWS Lambda": { file: "resources/demo_one.yml", code: $lambda },
-            "CloudWatch": { file: "serverless.yml (logSub)", code: $serverless },
-            "Kinesis Firehose": { file: "resources/firehose.yml", code: $firehose },
-            "Amazon S3": { file: "resources/s3.yml", code: $s3 },
-            "Amazon Athena": { file: "athena/logs_table.ddl", code: $athena }
+            "AWS Lambda": { file: "resources/demo_one.yml", code: lambdaCode },
+            "CloudWatch": { file: "serverless.yml (logSub)", code: serverlessCode },
+            "Kinesis Firehose": { file: "resources/firehose.yml", code: firehoseCode },
+            "Amazon S3": { file: "resources/s3.yml", code: s3Code },
+            "Amazon Athena": { file: "athena/logs_table.ddl", code: athenaCode }
         };
 
         const width = canvas.width;
@@ -122,6 +288,13 @@ resources:
             { name: "Amazon Athena", x: 1100, color: "#1292B4", icon: 'athena' }
         ];
 
+        const nodeImages = {};
+        nodes.forEach(node => {
+            const img = new Image();
+            img.src = `icons/${node.icon}.svg`;
+            nodeImages[node.name] = img;
+        });
+
         let particles = [];
         let frameCount = 0;
         let activeNode = null;
@@ -132,7 +305,7 @@ resources:
             const y = (e.clientY - rect.top) * (canvas.height / rect.height);
 
             nodes.forEach(node => {
-                const dist = Math.sqrt((x - node.x)**2 + (y - centerY)**2);
+                const dist = Math.sqrt((x - node.x) ** 2 + (y - centerY) ** 2);
                 if (dist < 45) {
                     activeNode = node.name;
                     fileName.innerText = configs[node.name].file;
@@ -167,26 +340,39 @@ resources:
             const isActive = activeNode === node.name;
             ctx.shadowBlur = isActive ? 20 : 0;
             ctx.shadowColor = node.color;
-            
+
             ctx.fillStyle = node.color;
             ctx.beginPath();
-            ctx.roundRect(node.x - 40, centerY - 40, 80, 80, 20);
+            let x = node.x - 40, y = centerY - 40, w = 80, h = 80, r = 20;
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
             ctx.fill();
-            
+
+            // Draw SVG Icon
+            const img = nodeImages[node.name];
+            if (img && img.complete) {
+                const size = 48; // Fit perfectly inside the 80x80 node box
+                ctx.drawImage(img, node.x - size / 2, centerY - size / 2, size, size);
+            }
+
             ctx.shadowBlur = 0;
             ctx.fillStyle = isActive ? '#FFF' : 'rgba(255,255,255,0.8)';
-            ctx.font = 700 14px Inter;
+            ctx.font = '700 14px Inter';
             ctx.textAlign = 'center';
             ctx.fillText(node.name, node.x, centerY + 65);
         }
 
         function animate() {
             ctx.clearRect(0, 0, width, height);
-            
+
             // Path
             ctx.beginPath();
             ctx.moveTo(nodes[0].x, centerY);
-            ctx.lineTo(nodes[3].x, centerY);
+            ctx.lineTo(nodes[4].x, centerY);
             ctx.strokeStyle = '#1E293B';
             ctx.lineWidth = 10;
             ctx.lineCap = 'round';
@@ -207,4 +393,5 @@ resources:
         animate();
     </script>
 </body>
+
 </html>
