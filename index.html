@@ -1,223 +1,210 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS Log Streaming Pipeline - Clean Visualization</title>
+    <title>AWS Log Streaming - Interactive Architecture</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #F8FAFC; /* Clean White/Grey background */
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Inter', -apple-system, sans-serif;
-        }
-        #canvas-container {
-            width: 95%;
-            max-width: 1400px;
-            aspect-ratio: 21 / 9;
-            position: relative;
-            background: #FFFFFF;
-            border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
-            overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #0F172A; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .node-active { filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.5)); }
+        pre { scrollbar-width: thin; scrollbar-color: #334155 #0F172A; }
     </style>
 </head>
-<body>
+<body class="h-screen w-screen flex overflow-hidden text-slate-200">
 
-    <div id="canvas-container">
-        <canvas id="pipelineCanvas" width="1400" height="600"></canvas>
+    <!-- Sidebar / Code Panel -->
+    <div class="w-1/3 h-full glass border-r border-slate-700 flex flex-col p-6 z-10">
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-sky-400 mb-2">Interactive Pipeline</h1>
+            <p class="text-slate-400 text-sm">Click any AWS service to see its configuration.</p>
+        </div>
+
+        <div id="code-container" class="flex-1 overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between mb-2">
+                <span id="file-name" class="text-xs font-mono text-sky-300">serverless.yml</span>
+                <span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-slate-400 font-mono uppercase tracking-wider">Infrastructure</span>
+            </div>
+            <pre id="code-block" class="flex-1 bg-[#011627] p-4 rounded-lg overflow-auto text-sm font-mono leading-relaxed text-slate-300 border border-slate-800 shadow-inner">service: logstreaming
+useDotenv: true
+configValidationMode: error
+
+provider:
+  name: aws
+  deploymentMethod: direct
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'ap-south-1'}
+  runtime: python3.11
+  memorySize: 128
+  timeout: 10
+  logRetentionInDays: 7
+
+plugins:
+  - serverless-python-requirements
+  - serverless-plugin-log-subscription
+
+custom:
+  pythonRequirements:
+    dockerizePip: false
+
+  logSubscription:
+    enabled: true
+    destinationArn:
+      Fn::GetAtt:
+        - LogFirehoseV5
+        - Arn
+    roleArn:
+      Fn::GetAtt:
+        - LogSubscriptionRole
+        - Arn
+    filterPattern: ""
+
+package:
+  individually: true
+  patterns:
+    - "!node_modules/**"
+    - "!requirements.txt"
+    - "!package.json"
+
+functions:
+  demo_one: ${file(resources/demo_one.yml)}
+  demo_two: ${file(resources/demo_two.yml)}
+  demo_three: ${file(resources/demo_three.yml)}
+  demo_four: ${file(resources/demo_four.yml)}
+
+resources:
+  Resources:
+    LogFirehoseV5: ${file(resources/firehose.yml)}
+    LogBucket: ${file(resources/s3.yml)}
+    FirehoseRole: ${file(resources/firehose_role.yml)}
+    LogSubscriptionRole: ${file(resources/log_subscription_role.yml)}
+</pre>
+        </div>
+
+        <div class="mt-6 pt-6 border-t border-slate-800">
+            <a href="https://github.com/Hemanth-Py/logstreaming" target="_blank" class="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-900 font-bold transition-all shadow-lg shadow-sky-500/20">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                View Repository
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Canvas Area -->
+    <div class="flex-1 relative flex items-center justify-center p-12 bg-[#020617]">
+        <canvas id="pipelineCanvas" width="1200" height="600" class="max-w-full max-h-full cursor-pointer"></canvas>
     </div>
 
     <script>
         const canvas = document.getElementById('pipelineCanvas');
         const ctx = canvas.getContext('2d');
+        const codeBlock = document.getElementById('code-block');
+        const fileName = document.getElementById('file-name');
+
+        const configs = {
+            "AWS Lambda": { file: "resources/demo_one.yml", code: $lambda },
+            "CloudWatch": { file: "serverless.yml (logSub)", code: $serverless },
+            "Kinesis Firehose": { file: "resources/firehose.yml", code: $firehose },
+            "Amazon S3": { file: "resources/s3.yml", code: $s3 },
+            "Amazon Athena": { file: "athena/logs_table.ddl", code: $athena }
+        };
 
         const width = canvas.width;
         const height = canvas.height;
         const centerY = height / 2;
 
         const nodes = [
-            { name: "AWS Lambda", x: 200, color: "#FF9900", icon: drawLambda },
-            { name: "CloudWatch", x: 450, color: "#E7157B", icon: drawCloudWatch },
-            { name: "Kinesis Firehose", x: 700, color: "#8C4FFF", icon: drawFirehose },
-            { name: "Amazon S3", x: 950, color: "#3F8624", icon: drawS3 },
-            { name: "Amazon Athena", x: 1200, color: "#1292B4", icon: drawAthena }
+            { name: "AWS Lambda", x: 150, color: "#FF9900", icon: 'lambda' },
+            { name: "CloudWatch", x: 400, color: "#E7157B", icon: 'cw' },
+            { name: "Kinesis Firehose", x: 650, color: "#8C4FFF", icon: 'firehose' },
+            { name: "Amazon S3", x: 900, color: "#3F8624", icon: 's3' },
+            { name: "Amazon Athena", x: 1100, color: "#1292B4", icon: 'athena' }
         ];
 
         let particles = [];
         let frameCount = 0;
-        let folderPulse = 0;
+        let activeNode = null;
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+            nodes.forEach(node => {
+                const dist = Math.sqrt((x - node.x)**2 + (y - centerY)**2);
+                if (dist < 45) {
+                    activeNode = node.name;
+                    fileName.innerText = configs[node.name].file;
+                    codeBlock.innerText = configs[node.name].code;
+                }
+            });
+        });
 
         class Particle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
+            constructor() {
+                this.x = nodes[0].x;
+                this.y = centerY;
                 this.active = true;
-                this.type = 'GZ';
+                this.type = 'raw';
             }
-
             update() {
-                let speed = 3.5;
-                if (this.x > nodes[1].x && this.x < nodes[2].x) {
-                    speed = 1.2;
-                } else if (this.x >= nodes[2].x && this.x < nodes[3].x) {
-                    speed = 6.5;
-                    this.type = 'JSON';
-                }
-
+                let speed = 4;
+                if (this.x > nodes[1].x && this.x < nodes[2].x) speed = 1.5;
+                if (this.x >= nodes[2].x) { speed = 7; this.type = 'json'; }
                 this.x += speed;
-
-                if (this.x >= nodes[3].x) {
-                    this.active = false;
-                    folderPulse = 1.0;
-                }
+                if (this.x > nodes[3].x) this.active = false;
             }
-
-            draw(ctx) {
+            draw() {
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.type === 'GZ' ? 4 : 5, 0, Math.PI * 2);
-                ctx.fillStyle = this.type === 'GZ' ? '#E11D48' : '#0EA5E9';
+                ctx.arc(this.x, this.y, this.type === 'raw' ? 4 : 5, 0, Math.PI * 2);
+                ctx.fillStyle = this.type === 'raw' ? '#FBBF24' : '#0EA5E9';
                 ctx.fill();
             }
         }
 
-        function drawPath() {
+        function drawNode(node) {
+            const isActive = activeNode === node.name;
+            ctx.shadowBlur = isActive ? 20 : 0;
+            ctx.shadowColor = node.color;
+            
+            ctx.fillStyle = node.color;
+            ctx.beginPath();
+            ctx.roundRect(node.x - 40, centerY - 40, 80, 80, 20);
+            ctx.fill();
+            
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = isActive ? '#FFF' : 'rgba(255,255,255,0.8)';
+            ctx.font = 700 14px Inter;
+            ctx.textAlign = 'center';
+            ctx.fillText(node.name, node.x, centerY + 65);
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Path
             ctx.beginPath();
             ctx.moveTo(nodes[0].x, centerY);
             ctx.lineTo(nodes[3].x, centerY);
-            ctx.strokeStyle = '#E2E8F0';
-            ctx.lineWidth = 14;
+            ctx.strokeStyle = '#1E293B';
+            ctx.lineWidth = 10;
             ctx.lineCap = 'round';
             ctx.stroke();
-        }
 
-        function drawIconBase(x, y, color) {
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.roundRect(x - 40, y - 40, 80, 80, 20);
-            ctx.fill();
-        }
-
-        function drawLambda(x, y) {
-            ctx.strokeStyle = '#FFFFFF';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.moveTo(x - 8, y - 10); ctx.lineTo(x + 8, y + 14);
-            ctx.moveTo(x, y + 4); ctx.lineTo(x - 8, y + 14);
-            ctx.stroke();
-        }
-
-        function drawCloudWatch(x, y) {
-            ctx.fillStyle = '#FFFFFF';
-            ctx.beginPath();
-            ctx.arc(x - 8, y + 2, 8, 0, Math.PI*2);
-            ctx.arc(x + 4, y - 4, 10, 0, Math.PI*2);
-            ctx.arc(x + 12, y + 6, 6, 0, Math.PI*2);
-            ctx.rect(x - 8, y - 2, 20, 14);
-            ctx.fill();
-        }
-
-        function drawFirehose(x, y) {
-            ctx.fillStyle = '#FFFFFF';
-            ctx.beginPath();
-            ctx.moveTo(x - 14, y - 10); ctx.lineTo(x + 14, y - 10);
-            ctx.lineTo(x + 6, y + 12); ctx.lineTo(x - 6, y + 12);
-            ctx.fill();
-            
-            ctx.font = 'bold 10px sans-serif';
-            ctx.fillStyle = '#475569';
-            ctx.textAlign = 'center';
-            ctx.fillText("UNZIP", x, y - 45);
-            ctx.fillText("+ \\n", x, y + 55);
-        }
-
-        function drawS3(x, y) {
-            ctx.strokeStyle = '#FFFFFF';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.ellipse(x, y - 10, 14, 5, 0, 0, Math.PI * 2);
-            ctx.moveTo(x - 14, y - 10); ctx.lineTo(x - 14, y + 10);
-            ctx.moveTo(x + 14, y - 10); ctx.lineTo(x + 14, y + 10);
-            ctx.ellipse(x, y + 10, 14, 5, 0, 0, Math.PI);
-            ctx.stroke();
-        }
-
-        function drawAthena(x, y) {
-            ctx.strokeStyle = '#FFFFFF';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(x - 12, y - 8); ctx.lineTo(x + 12, y - 8);
-            ctx.moveTo(x - 12, y); ctx.lineTo(x + 12, y);
-            ctx.moveTo(x - 12, y + 8); ctx.lineTo(x + 12, y + 8);
-            ctx.stroke();
-        }
-
-        function drawFolders(x, y) {
-            const drawF = (fx, fy, alpha) => {
-                ctx.fillStyle = `rgba(234, 179, 8, ${alpha})`;
-                ctx.beginPath();
-                ctx.roundRect(fx - 12, fy - 6, 24, 16, 2);
-                ctx.fill();
-            };
-            drawF(x, y + 25, 0.4);
-            drawF(x, y + 15, 0.7);
-            drawF(x, y + 5, 1.0);
-        }
-
-        function animate(time) {
-            ctx.clearRect(0, 0, width, height);
-            drawPath();
-
-            if (frameCount % 12 === 0) particles.push(new Particle(nodes[0].x, centerY));
-
-            for (let i = particles.length - 1; i >= 0; i--) {
-                particles[i].update();
-                if (!particles[i].active) particles.splice(i, 1);
-                else particles[i].draw(ctx);
-            }
-
-            drawFolders(nodes[3].x, centerY);
-
-            nodes.forEach(node => {
-                drawIconBase(node.x, centerY, node.color);
-                node.icon(node.x, centerY);
-                ctx.fillStyle = '#475569';
-                ctx.font = '600 14px sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText(node.name, node.x, centerY + 70);
+            if (frameCount % 15 === 0) particles.push(new Particle());
+            particles.forEach((p, i) => {
+                p.update();
+                if (!p.active) particles.splice(i, 1);
+                else p.draw();
             });
 
-            // Scanner
-            const magX = nodes[3].x + Math.sin(time * 0.002) * 40;
-            const magY = centerY - 80;
-            ctx.beginPath();
-            ctx.arc(magX, magY, 15, 0, Math.PI*2);
-            ctx.strokeStyle = '#1292B4';
-            ctx.lineWidth = 4;
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(magX + 10, magY + 10); ctx.lineTo(magX + 18, magY + 18);
-            ctx.stroke();
+            nodes.forEach(drawNode);
 
             frameCount++;
             requestAnimationFrame(animate);
         }
-
-        requestAnimationFrame(animate);
+        animate();
     </script>
 </body>
 </html>
