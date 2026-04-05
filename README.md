@@ -1,6 +1,13 @@
 # 🚀 LogStreaming: Serverless Log Aggregation & Analytics
 
-A production-grade, cost-optimized pipeline to stream AWS CloudWatch logs to S3 for SQL-based analysis in Amazon Athena. This project is built using the Serverless Framework and utilizes native AWS features to avoid custom Lambda processing costs.
+A cost-optimized pipeline to stream AWS CloudWatch logs to S3 for SQL-based analysis in Amazon Athena. Built using the Serverless Framework with native AWS features to avoid custom Lambda processing costs.
+
+![Python](https://img.shields.io/badge/Python-3.11-3776ab?style=flat-square&logo=python&logoColor=white)
+![AWS Lambda](https://img.shields.io/badge/AWS-Lambda-FF9900?style=flat-square&logo=amazon-aws&logoColor=white)
+![Kinesis](https://img.shields.io/badge/Kinesis-Firehose-FF9900?style=flat-square&logo=amazon-aws&logoColor=white)
+![S3](https://img.shields.io/badge/AWS-S3-569A31?style=flat-square&logo=amazon-s3&logoColor=white)
+![Athena](https://img.shields.io/badge/AWS-Athena-232F3E?style=flat-square&logo=amazon-aws&logoColor=white)
+![Serverless](https://img.shields.io/badge/Serverless-Framework-FD5750?style=flat-square&logo=serverless&logoColor=white)
 
 ![Pipeline Workflow](workflow.gif)
 
