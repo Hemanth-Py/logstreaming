@@ -17,34 +17,52 @@ A cost-optimized pipeline to stream AWS CloudWatch logs to S3 for SQL-based anal
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-View_Animation-blue?style=for-the-badge&logo=opsgenie)](https://Hemanth-Py.github.io/logstreaming/)
 
-```mermaid
-graph LR
-    %% Styles
-    classDef lambda fill:#FF9900,stroke:#232F3E,color:white;
-    classDef cw fill:#E05243,stroke:#232F3E,color:white;
-    classDef firehose fill:#693CC5,stroke:#232F3E,color:white;
-    classDef s3 fill:#3F8624,stroke:#232F3E,color:white;
-    classDef athena fill:#00A4A6,stroke:#232F3E,color:white;
-    classDef user fill:#232F3E,stroke:#232F3E,color:white;
-
-    %% Nodes
-    A[Lambda Functions]:::lambda -->|Logs| B(CloudWatch Logs):::cw
-    B -->|Subscription Filter| C{Kinesis Firehose}:::firehose
-    C -->|1. Decompress| C
-    C -->|2. Delimit| C
-    C -->|3. GZIP| D[(Amazon S3)]:::s3
-    D -->|Partition Projection| E[Amazon Athena]:::athena
-    E -->|SQL Query| F[User Analysis]:::user
-
-    subgraph "Ingestion & Storage"
-    C
-    D
-    end
-
-    subgraph "Analysis"
-    E
-    F
-    end
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                                                                     │
+│  Lambda Functions                                                   │
+│  ├── demo_one                                                       │
+│  ├── demo_two        ──→  CloudWatch Logs (auto-compressed GZIP)   │
+│  ├── demo_three      ──→  │                                         │
+│  └── demo_four       ──→  │                                         │
+│                            │                                         │
+└────────────────────────────┼─────────────────────────────────────────┘
+                             │
+                             │  Subscription Filter
+                             ▼
+        ┌────────────────────────────────────────┐
+        │  Kinesis Firehose (Processing)         │
+        │  ┌──────────────────────────────────┐  │
+        │  │ 1. Decompress GZIP               │  │
+        │  │ 2. Append newline per record     │  │
+        │  │ 3. Re-compress with GZIP        │  │
+        │  └──────────────────────────────────┘  │
+        └────────────────────────────────────────┘
+                             │
+                             │  Hive Partitioning
+                             │  (year/month/day/hour)
+                             ▼
+        ┌────────────────────────────────────────┐
+        │  Amazon S3 (Data Lake)                 │
+        │  ├── s3://bucket/year=2026/           │
+        │  │   ├── month=04/                    │
+        │  │   │   ├── day=05/                  │
+        │  │   │   │   └── hour=10/             │
+        │  │   │   │       └── logs.gz          │
+        └────────────────────────────────────────┘
+                             │
+                             │  Partition Projection
+                             ▼
+        ┌────────────────────────────────────────┐
+        │  Amazon Athena (SQL Analytics)         │
+        │  SELECT logGroup, message              │
+        │  FROM cloudwatch_logs                  │
+        │  WHERE year='2026' AND month='04'      │
+        └────────────────────────────────────────┘
+                             │
+                             │  Query Results
+                             ▼
+                    User Analysis & Insights
 ```
 
 ## 🧠 How It Works (The "Secret Sauce")
