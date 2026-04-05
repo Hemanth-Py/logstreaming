@@ -22,11 +22,11 @@ A cost-optimized pipeline to stream AWS CloudWatch logs to S3 for SQL-based anal
 │                                                                     │
 │  Lambda Functions                                                   │
 │  ├── demo_one                                                       │
-│  ├── demo_two        ──→  CloudWatch Logs (auto-compressed GZIP)   │
-│  ├── demo_three      ──→  │                                         │
-│  └── demo_four       ──→  │                                         │
-│                            │                                         │
-└────────────────────────────┼─────────────────────────────────────────┘
+│  ├── demo_two         ──→  CloudWatch Logs (auto-compressed GZIP)   │
+│  ├── demo_three       ──→  │                                        │
+│  └── demo_four        ──→  │                                        │
+│                            │                                        │
+└────────────────────────────┼────────────────────────────────────────┘
                              │
                              │  Subscription Filter
                              ▼
@@ -35,7 +35,7 @@ A cost-optimized pipeline to stream AWS CloudWatch logs to S3 for SQL-based anal
         │  ┌──────────────────────────────────┐  │
         │  │ 1. Decompress GZIP               │  │
         │  │ 2. Append newline per record     │  │
-        │  │ 3. Re-compress with GZIP        │  │
+        │  │ 3. Re-compress with GZIP         │  │
         │  └──────────────────────────────────┘  │
         └────────────────────────────────────────┘
                              │
@@ -44,11 +44,11 @@ A cost-optimized pipeline to stream AWS CloudWatch logs to S3 for SQL-based anal
                              ▼
         ┌────────────────────────────────────────┐
         │  Amazon S3 (Data Lake)                 │
-        │  ├── s3://bucket/year=2026/           │
-        │  │   ├── month=04/                    │
-        │  │   │   ├── day=05/                  │
-        │  │   │   │   └── hour=10/             │
-        │  │   │   │       └── logs.gz          │
+        │  ├── s3://bucket/year=2026/            │
+        │  │   ├── month=04/                     │
+        │  │   │   ├── day=05/                   │
+        │  │   │   │   └── hour=10/              │
+        │  │   │   │       └── logs.gz           │
         └────────────────────────────────────────┘
                              │
                              │  Partition Projection
